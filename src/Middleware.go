@@ -20,13 +20,12 @@ func ValidateToken(w http.ResponseWriter, r *http.Request, next http.HandlerFunc
 		username := claims["sub"].(string)
 		b := etcd.Get(username)
 		if token.Valid && b == nil {
-
 			etcd.Set(username, "")
 			next(w, r)
 
 		} else {
 			w.WriteHeader(http.StatusUnauthorized)
-			fmt.Fprint(w, "Token is not valid")
+			fmt.Fprint(w, 0)
 		}
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)

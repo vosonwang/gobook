@@ -17,15 +17,15 @@ type User struct {
 	DeletedAt *time.Time
 }
 
-func FindUser(user User) bool {
+func FindUser(user User) (User,bool) {
 
 	a := db.Where(user).Find(&user)
 
 	if a.RowsAffected == 1 {
-		return true
+		return user,true
 	}
 
-	return false
+	return User{},false
 }
 
 func ParseUser(body io.Reader) User {

@@ -16,8 +16,7 @@ func main() {
 	r := mux.NewRouter()
 	adminRouter := mux.NewRouter().PathPrefix("/admin").Subrouter().StrictSlash(true)
 
-	r.HandleFunc("/tocs", TocsHandler).Methods("GET")
-	r.HandleFunc("/tocs/{id}", TocsHandler).Methods("GET")
+
 	r.HandleFunc("/articles/{id}", TocsHandler).Methods("GET")
 	r.HandleFunc("/images/{id}", TocsHandler).Methods("GET")
 	r.HandleFunc("/files/{id}", TocsHandler).Methods("GET")
@@ -25,10 +24,8 @@ func main() {
 	r.HandleFunc("/nodes/{kind}", GetNodes).Methods("GET")
 
 
-	adminRouter.HandleFunc("/{id}", TocsHandler).Methods("GET")
-
-	adminRouter.HandleFunc("/tocs", TocsHandler).Methods("POST")
-	adminRouter.HandleFunc("/tocs/{id}", PointHandler).Methods("PUT", "DELETE", "PATCH")
+	adminRouter.HandleFunc("/nodes", NewNode).Methods("POST")
+	adminRouter.HandleFunc("/nodes/{id}", UpdateNode).Methods("PUT", "DELETE", "PATCH")
 
 	adminRouter.HandleFunc("/articles", TocsHandler).Methods("POST")
 	adminRouter.HandleFunc("/articles/{id}", PointHandler).Methods("PUT", "DELETE", "PATCH")

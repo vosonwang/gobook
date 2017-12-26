@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Article struct {
+type Article2 struct {
 	ID uuid.UUID `json:"id"`
 	Value  string    `json:"value"`
 	UserID uuid.UUID `json:"author"`

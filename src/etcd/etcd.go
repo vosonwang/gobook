@@ -28,23 +28,18 @@ func init() {
 }
 
 func Set(key string, value string) {
-	resp, err := kapi.Set(context.Background(), key, value, &client.SetOptions{TTL: time.Hour, Refresh: true})
+	_, err := kapi.Set(context.Background(), key, value, &client.SetOptions{TTL: time.Hour, Refresh: true})
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		fmt.Println(resp)
 	}
 }
 
 func Get(key string) error {
 
-	resp, err := kapi.Get(context.Background(), key, nil)
+	_, err := kapi.Get(context.Background(), key, nil)
 	if err != nil {
 		fmt.Println(err)
 		return err
-	} else {
-		fmt.Println(resp)
-		return nil
 	}
-
+	return nil
 }
