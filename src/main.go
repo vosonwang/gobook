@@ -37,6 +37,8 @@ func main() {
 	adminRouter.HandleFunc("/users/{id}", TocsHandler).Methods("GET","PATCH","DELETE")
 	adminRouter.HandleFunc("/users", TocsHandler).Methods("POST")
 
+	adminRouter.HandleFunc("/nodekey/{id}", ExchangeNode).Methods("PATCH")
+
 
 
 	// Create a new negroni for the admin middleware

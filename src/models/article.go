@@ -5,21 +5,18 @@ import (
 	"time"
 )
 
-type Article2 struct {
-	ID uuid.UUID `json:"id"`
-	Value  string    `json:"value"`
-	UserID uuid.UUID `json:"author"`
+type Article struct {
+	Id        uuid.UUID `json:"id"`
+	Article   string    `json:"article"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time
 }
 
-func GetArticle()  Article{
-	var article Article
-	if err := db.Find(&article).Error; err != nil {
-		return article
-	}else {
-		return article
-	}
+func (Article) TableName() string {
+	return "nodes"
 }
 
+func FindArticle()  {
+	
+}

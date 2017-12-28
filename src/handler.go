@@ -39,6 +39,7 @@ func NewNode(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json;   charset=UTF-8")
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintln(w, "内容解析错误！")
+		ErrorResponse(err, w, http.StatusBadRequest)
 	}
 
 }
@@ -51,35 +52,32 @@ func UpdateNode(w http.ResponseWriter, r *http.Request) {
 	case r.Method == "PATCH":
 		if node, err := models.FindNode(id); err == nil {
 			if m, err := models.ParseNode(r.Body); err == nil {
-				for key, value := range m {
-					switch {
-					case key == "title":
-						node.Title = value.(string)
-					case key == "nodeKey":
-						node.NodeKey = value.(int)
-					}
-				}
+				node.Title = m["title"].(string)
 				if err := models.UpdateNode(node); err == nil {
-					w.Header().Set("Content-Type", "application/json;   charset=UTF-8")
-					w.WriteHeader(http.StatusOK)
-					fmt.Fprintln(w,1)
+					JsonResponse(1, w)
 				} else {
-					w.Header().Set("Content-Type", "application/json;   charset=UTF-8")
-					w.WriteHeader(http.StatusBadRequest)
-					fmt.Fprintln(w, err)
+					ErrorResponse(err, w, http.StatusBadRequest)
 				}
 			} else {
-				w.Header().Set("Content-Type", "application/json;   charset=UTF-8")
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintln(w, err)
+				ErrorResponse(err, w, http.StatusBadRequest)
+			}
+		} else {
+			ErrorResponse(err, w, http.StatusBadRequest)
+		}
+
+	case r.Method == "DELETE":
+		if node, err := models.FindNode(id); err == nil {
+			if err := models.DeleteNode(node); err == nil {
+				JsonResponse(1, w)
+			} else {
+
+				ErrorResponse(err, w, http.StatusBadRequest)
 			}
 		} else {
 			w.Header().Set("Content-Type", "application/json;   charset=UTF-8")
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintln(w, err)
 		}
-
-	case r.Method == "DELETE":
 
 	case r.Method == "PUT":
 
@@ -134,7 +132,6 @@ func NewToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func JsonResponse(response interface{}, w http.ResponseWriter) {
-
 	j, err := json.Marshal(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -144,6 +141,12 @@ func JsonResponse(response interface{}, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(j)
+}
+
+func ErrorResponse(err error, w http.ResponseWriter, code int) {
+	w.Header().Set("Content-Type", "application/json;   charset=UTF-8")
+	w.WriteHeader(code)
+	fmt.Fprintln(w, err)
 }
 
 func GetNodes(w http.ResponseWriter, r *http.Request) {
@@ -158,5 +161,11 @@ func GetNodes(w http.ResponseWriter, r *http.Request) {
 	if d := json.NewEncoder(w).Encode(b); err != nil {
 		panic(d)
 	}
+
+}
+
+func ExchangeNode(w http.ResponseWriter, r *http.Request)  {
+	vars := mux.Vars(r)
+	id := vars["id"]
 
 }
